@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Boda en la Playa | Kasss & Alex</title>
+  <title>Kasss & Alex | Beach Wedding</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
@@ -12,6 +12,19 @@
       background: linear-gradient(#e8f4ff, #ffffff);
       color: #1e3a5f;
       padding: 30px 20px;
+    }
+
+    .topbar {
+      text-align: right;
+      margin-bottom: 10px;
+    }
+
+    .topbar button {
+      background: none;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      color: #1e3a5f;
     }
 
     .contenedor {
@@ -25,7 +38,7 @@
 
     h1 {
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
     }
 
     h2 {
@@ -36,7 +49,7 @@
     }
 
     .seccion {
-      margin-top: 25px;
+      margin-top: 22px;
     }
 
     .seccion strong {
@@ -51,7 +64,7 @@
       color: white;
       border: none;
       border-radius: 30px;
-      font-size: 1.1em;
+      font-size: 1.05em;
       cursor: pointer;
       width: 100%;
     }
@@ -63,14 +76,14 @@
 
     .mensaje {
       text-align: center;
-      margin-top: 20px;
+      margin-top: 18px;
       font-weight: bold;
       color: green;
       display: none;
     }
 
     .volver {
-      margin-top: 25px;
+      margin-top: 22px;
       display: block;
       text-align: center;
       text-decoration: none;
@@ -82,48 +95,77 @@
 
 <body>
 
+  <!-- Selector de idioma -->
+  <div class="topbar">
+    <button onclick="setLang('es')">ES</button> | 
+    <button onclick="setLang('en')">EN</button>
+  </div>
+
   <div class="contenedor">
 
-    <h1>🌴 Boda en la Playa</h1>
+    <h1 data-es="🌴 Boda en la Playa" data-en="🌴 Beach Wedding"></h1>
     <h2>Kasss & Alex</h2>
 
     <div class="seccion">
-      <strong>📅 Fecha</strong>
-      <div>Domingo, 15 de marzo de 2027</div>
+      <strong data-es="📅 Fecha" data-en="📅 Date"></strong>
+      <div data-es="Domingo, 15 de marzo de 2027"
+           data-en="Sunday, March 15, 2027"></div>
     </div>
 
     <div class="seccion">
-      <strong>📍 Lugar</strong>
-      <div>Hotel por definir – Riviera Maya</div>
+      <strong data-es="📍 Lugar" data-en="📍 Location"></strong>
+      <div data-es="Hotel por definir – Riviera Maya"
+           data-en="Hotel to be announced – Riviera Maya"></div>
     </div>
 
     <div class="seccion">
-      <strong>👗 Código de vestimenta</strong>
-      <div>Formal Playa</div>
+      <strong data-es="👗 Código de vestimenta"
+              data-en="👗 Dress code"></strong>
+      <div data-es="Formal Playa"
+           data-en="Beach Formal"></div>
     </div>
 
     <div class="seccion">
-      <strong>⏰ Hora</strong>
-      <div>5:30 PM</div>
+      <strong data-es="⏰ Hora" data-en="⏰ Time"></strong>
+      <div data-es="5:30 PM"
+           data-en="5:30 PM"></div>
     </div>
 
-    <button class="confirmar" id="btnConfirmar">
-      Confirmar asistencia
+    <button class="confirmar" id="btnConfirmar"
+      data-es="Confirmar asistencia"
+      data-en="Confirm attendance">
     </button>
 
-    <div class="mensaje" id="mensajeConfirmado">
-      ✅ Asistencia confirmada. ¡Gracias!
+    <div class="mensaje" id="mensajeConfirmado"
+      data-es="✅ Asistencia confirmada. ¡Gracias!"
+      data-en="✅ Attendance confirmed. Thank you!">
     </div>
 
-    <!-- VOLVER CONSERVANDO PERMISOS -->
-    <a class="volver" id="volverEventos">← Volver a eventos</a>
+    <a class="volver" id="volverEventos"
+      data-es="← Volver a eventos"
+      data-en="← Back to events">
+    </a>
 
   </div>
 
   <script>
-    // =========================
-    // CONFIRMAR ASISTENCIA
-    // =========================
+    // =====================
+    // IDIOMA
+    // =====================
+    const lang = localStorage.getItem("lang") || "es";
+
+    function setLang(l) {
+      localStorage.setItem("lang", l);
+      location.reload();
+    }
+
+    document.querySelectorAll("[data-es]").forEach(el => {
+      el.textContent = el.getAttribute("data-" + lang);
+    });
+
+    // =====================
+    // CONFIRMACIÓN
+    // =====================
     const boton = document.getElementById("btnConfirmar");
     const mensaje = document.getElementById("mensajeConfirmado");
 
@@ -138,9 +180,9 @@
       mensaje.style.display = "block";
     });
 
-    // =========================
+    // =====================
     // VOLVER A EVENTOS CON PERMISOS
-    // =========================
+    // =====================
     const params = new URLSearchParams(window.location.search);
     const evento = params.get("evento");
     const volver = document.getElementById("volverEventos");
