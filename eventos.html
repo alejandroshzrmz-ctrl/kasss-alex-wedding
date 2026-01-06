@@ -15,6 +15,19 @@
       color: #1e3a5f;
     }
 
+    .topbar {
+      text-align: right;
+      margin-bottom: 20px;
+    }
+
+    .topbar button {
+      background: none;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      color: #1e3a5f;
+    }
+
     h1 {
       margin-bottom: 30px;
     }
@@ -55,66 +68,85 @@
 
 <body>
 
-  <h1>Elige el evento al que te hemos invitado</h1>
+  <!-- Selector de idioma -->
+  <div class="topbar">
+    <button onclick="setLang('es')">ES</button> |
+    <button onclick="setLang('en')">EN</button>
+  </div>
+
+  <h1 data-es="Elige el evento al que te hemos invitado"
+      data-en="Choose the event you are invited to">
+    Elige el evento al que te hemos invitado
+  </h1>
 
   <div class="contenedor">
-    <a class="evento" data-evento="playa" id="linkPlaya">
-      <span>🌴</span> Boda en la Playa
+    <a class="evento" data-evento="playa">
+      <span>🌴</span>
+      <span data-es="Boda en la Playa" data-en="Beach Wedding">Boda en la Playa</span>
     </a>
 
-    <a class="evento" data-evento="civil" id="linkCivil">
-      <span>📜</span> Boda Civil
+    <a class="evento" data-evento="civil">
+      <span>📜</span>
+      <span data-es="Boda Civil" data-en="Civil Wedding">Boda Civil</span>
     </a>
 
-    <a class="evento" data-evento="religiosa" id="linkReligiosa">
-      <span>⛪</span> Boda Religiosa
+    <a class="evento" data-evento="religiosa">
+      <span>⛪</span>
+      <span data-es="Boda Religiosa" data-en="Religious Wedding">Boda Religiosa</span>
     </a>
   </div>
 
-  <div class="bloqueo" id="mensajeBloqueo">
+  <div class="bloqueo" id="mensajeBloqueo"
+       data-es="🔒 No tienes acceso a ningún evento."
+       data-en="🔒 You do not have access to any event.">
     🔒 No tienes acceso a ningún evento.
   </div>
 
   <script>
+    // =====================
+    // IDIOMA
+    // =====================
+    const lang = localStorage.getItem("lang") || "es";
+    function setLang(l){ localStorage.setItem("lang", l); location.reload(); }
+
+    document.querySelectorAll("[data-es]").forEach(el => {
+      el.textContent = el.getAttribute("data-" + lang);
+    });
+
+    // =====================
+    // PERMISOS DE EVENTOS
+    // =====================
     const params = new URLSearchParams(window.location.search);
     const permiso = params.get("evento");
 
     const eventos = document.querySelectorAll(".evento");
     const mensaje = document.getElementById("mensajeBloqueo");
 
-    // ===============================
-    // MOSTRAR EVENTOS CORRECTOS
-    // ===============================
     if (!permiso) {
       // Sin parámetros → mostrar los 3
       eventos.forEach(e => e.style.display = "block");
     } else {
       const permitidos = permiso.split(",");
-      let algunoVisible = false;
+      let visible = false;
 
       eventos.forEach(e => {
         if (permitidos.includes(e.dataset.evento)) {
           e.style.display = "block";
-          algunoVisible = true;
+          visible = true;
         }
       });
 
-      if (!algunoVisible) {
-        mensaje.style.display = "block";
-      }
+      if (!visible) mensaje.style.display = "block";
     }
 
-    // ===============================
+    // =====================
     // CONSERVAR PERMISOS AL ENTRAR
-    // ===============================
+    // =====================
     eventos.forEach(e => {
-      const eventoActual = e.dataset.evento;
-
-      if (permiso) {
-        e.href = eventoActual + ".html?evento=" + permiso;
-      } else {
-        e.href = eventoActual + ".html";
-      }
+      const ev = e.dataset.evento;
+      e.href = permiso
+        ? ev + ".html?evento=" + permiso
+        : ev + ".html";
     });
   </script>
 
