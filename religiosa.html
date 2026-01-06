@@ -2,70 +2,97 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Boda Religiosa</title>
+<title>Religious Wedding | Kasss & Alex</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body{font-family:Arial;background:#eef3ee;padding:30px}
+body{font-family:Arial;background:#eef3ee;padding:30px;color:#333}
+.top{display:flex;justify-content:flex-end;margin-bottom:10px}
+.top button{border:none;background:none;font-weight:bold;cursor:pointer}
 .card{max-width:500px;margin:auto;background:white;padding:25px;border-radius:20px}
 input,select,button{
-  width:100%;
-  margin-top:10px;
-  padding:12px;
-  border-radius:12px;
-  border:1px solid #ccc;
+  width:100%;margin-top:10px;padding:12px;
+  border-radius:12px;border:1px solid #ccc
 }
-button{background:#2c5f2d;color:white;border:none}
-.back{
-  margin-top:15px;
-  background:#ccc;
-  color:black;
-}
+button.main{background:#2c5f2d;color:white;border:none}
+button.back{background:#ccc;color:black}
 </style>
 </head>
+
 <body>
 
-<div class="card">
-<h2>⛪ Boda Religiosa</h2>
-<p>Aquí va la información de la boda religiosa: iglesia, hora, vestimenta.</p>
+<div class="top">
+  <button onclick="setLang('es')">ES</button> | 
+  <button onclick="setLang('en')">EN</button>
+</div>
 
-<h3>Confirmar asistencia</h3>
+<div class="card">
+<h2 data-es="⛪ Boda Religiosa" data-en="⛪ Religious Wedding">⛪ Boda Religiosa</h2>
+
+<p data-es="Ceremonia religiosa en compañía de familia y amigos."
+   data-en="Religious ceremony with family and friends.">
+Ceremonia religiosa en compañía de familia y amigos.
+</p>
+
+<h3 data-es="Confirmar asistencia" data-en="Confirm attendance">
+Confirmar asistencia
+</h3>
 
 <input id="cel" placeholder="WhatsApp / Celular">
 <input id="correo" placeholder="Correo electrónico">
 <select id="acomps"></select>
 
-<button onclick="confirmar()">Confirmar asistencia</button>
-<button class="back" onclick="volver()">Volver</button>
+<button class="main"
+  data-es="Confirmar asistencia"
+  data-en="Confirm attendance"
+  onclick="confirmar()">
+Confirmar asistencia
+</button>
+
+<button class="back"
+  data-es="Volver"
+  data-en="Back"
+  onclick="volver()">
+Volver
+</button>
 </div>
 
 <script>
+/* ===== CONFIG ===== */
 const API = "https://script.google.com/macros/s/AKfycbxd8RlsY09Bqjp2A9db60X9Bj-W7noj8WPJy1CLgHTLjNQTWb_9eC0o2TeFp0dQ3ZRbFw/exec";
+
+/* ===== IDIOMA ===== */
+const lang = localStorage.getItem("lang") || "es";
+function setLang(l){ localStorage.setItem("lang",l); location.reload(); }
+document.querySelectorAll("[data-es]").forEach(el=>{
+  el.textContent = el.getAttribute("data-"+lang);
+});
+
+/* ===== DATA ===== */
 const id = new URLSearchParams(window.location.search).get("id");
 
 fetch(`${API}?id=${id}`)
 .then(r=>r.json())
 .then(d=>{
   const s = document.getElementById("acomps");
-  for(let i=1;i<=d.max;i++){
-    s.innerHTML += `<option value="${i}">${i} persona(s)</option>`;
+  for(let i=0;i<=d.max;i++){
+    s.innerHTML += `<option value="${i}">${i}</option>`;
   }
 });
 
 function confirmar(){
-  const data = {
-    id,
-    evento:"religiosa",
-    celular:cel.value,
-    correo:correo.value,
-    acomp:acomps.value
-  };
-
   fetch(API,{
     method:"POST",
-    body:JSON.stringify(data)
-  }).then(()=>{
-    alert("¡Gracias por confirmar tu asistencia!");
-  });
+    body:JSON.stringify({
+      id,
+      evento:"religiosa",
+      celular:cel.value,
+      correo:correo.value,
+      acomp:acomps.value
+    })
+  }).then(()=>alert(lang==="es"
+    ? "¡Gracias por confirmar!"
+    : "Thank you for confirming!"
+  ));
 }
 
 function volver(){
