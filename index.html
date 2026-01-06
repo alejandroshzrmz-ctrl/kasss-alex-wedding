@@ -1,147 +1,47 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Kasss & Alex Wedding</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      height: 100vh;
-      background:
-        linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
-        url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee");
-      background-size: cover;
-      background-position: center;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      text-align: center;
-    }
-
-    .topbar {
-      text-align: right;
-      padding: 15px 20px;
-    }
-
-    .topbar button {
-      background: none;
-      border: none;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 0.9em;
-    }
-
-    h1 {
-      margin-top: 80px;
-      font-size: 2.6em;
-      letter-spacing: 1px;
-    }
-
-    h2 {
-      font-weight: normal;
-      margin-top: 10px;
-      font-size: 1.2em;
-      opacity: 0.95;
-    }
-
-    .btn {
-      margin: 40px auto;
-      padding: 16px 40px;
-      background: white;
-      color: #1e3a5f;
-      border-radius: 30px;
-      text-decoration: none;
-      font-size: 1.1em;
-      font-weight: bold;
-      width: fit-content;
-      cursor: pointer;
-    }
-
-    footer {
-      font-size: 0.8em;
-      margin-bottom: 20px;
-      opacity: 0.85;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Kasss & Alex</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  height:100vh;
+  background: url('https://images.unsplash.com/photo-1523430410476-0185cb1f6ff9') center/cover no-repeat;
+  display:flex;
+  justify-content:center;
+  align-items:flex-end;
+}
+button{
+  margin-bottom:40px;
+  padding:18px 32px;
+  font-size:18px;
+  border:none;
+  border-radius:30px;
+  background:#0a3d62;
+  color:white;
+  cursor:pointer;
+}
+</style>
 </head>
-
 <body>
 
-  <!-- Idioma -->
-  <div class="topbar">
-    <button onclick="setLang('es')">ES</button> |
-    <button onclick="setLang('en')">EN</button>
-  </div>
+<button onclick="go()">Acompáñanos</button>
 
-  <div>
-    <h1 data-es="Kasss & Alex" data-en="Kasss & Alex">Kasss & Alex</h1>
-    <h2 id="nombreInvitado"
-        data-es="Te invitamos a celebrar con nosotros"
-        data-en="We invite you to celebrate with us">
-      Te invitamos a celebrar con nosotros
-    </h2>
-  </div>
+<script>
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
 
-  <a class="btn" id="acompananos"
-     data-es="Acompáñanos"
-     data-en="Join us">
-    Acompáñanos
-  </a>
+function go(){
+  if(!id){
+    alert("Invitación inválida");
+    return;
+  }
+  window.location.href = "eventos.html?id=" + id;
+}
+</script>
 
-  <footer data-es="Invitación digital"
-          data-en="Digital invitation">
-    Invitación digital
-  </footer>
-
-  <script>
-    // =====================
-    // CONFIGURA TU URL DE APPS SCRIPT AQUÍ
-    // =====================
-    const API_URL = "https://script.google.com/macros/s/AKfycbyyN4myVmXJwBgnIe9qI92LoP22QbJbO8Zk-5pW3NKYA24DyDVV80XT9wsK-a0VdvEwZA/exec";
-
-    // =====================
-    // IDIOMA
-    // =====================
-    const lang = localStorage.getItem("lang") || "es";
-    function setLang(l) {
-      localStorage.setItem("lang", l);
-      location.reload();
-    }
-
-    document.querySelectorAll("[data-es]").forEach(el => {
-      el.textContent = el.getAttribute("data-" + lang);
-    });
-
-    // =====================
-    // LEER ID DE INVITADO
-    // =====================
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
-
-    const boton = document.getElementById("acompananos");
-    const nombreInvitado = document.getElementById("nombreInvitado");
-
-    if (!id) {
-      nombreInvitado.textContent =
-        lang === "es"
-          ? "Invitación personalizada requerida"
-          : "Personalized invitation required";
-      boton.style.display = "none";
-    } else {
-      fetch(API_URL + "?id=" + id)
-        .then(r => r.json())
-        .then(data => {
-          if (data.error) {
-            nombreInvitado.textContent = data.error;
-            boton.style.display = "none";
-            return;
-          }
-
-          // Mostrar nombre del invitado
-          nombreInvitado.textContent =
-            (lang =
+</body>
+</html>
