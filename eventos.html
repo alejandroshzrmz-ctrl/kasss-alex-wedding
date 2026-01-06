@@ -28,9 +28,14 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.08);
       text-decoration: none;
       color: inherit;
-      display: block;
+      display: none; /* 👈 OCULTAS POR DEFECTO */
       font-size: 1.2em;
       font-weight: bold;
+    }
+
+    .error {
+      margin-top: 60px;
+      color: #777;
     }
   </style>
 </head>
@@ -39,9 +44,28 @@
 
 <h2>Elige el evento al que te hemos invitado</h2>
 
-<a class="card" href="playa.html">🌴 Boda en la Playa</a>
-<a class="card" href="civil.html">📜 Boda Civil</a>
-<a class="card" href="religiosa.html">⛪ Boda Religiosa</a>
+<a id="playa" class="card" href="playa.html">🌴 Boda en la Playa</a>
+<a id="civil" class="card" href="civil.html">📜 Boda Civil</a>
+<a id="religiosa" class="card" href="religiosa.html">⛪ Boda Religiosa</a>
+
+<div id="error" class="error" style="display:none;">
+  <p>🔒 No tienes acceso a ningún evento.</p>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const evento = params.get("evento");
+
+  if (evento === "playa") {
+    document.getElementById("playa").style.display = "block";
+  } else if (evento === "civil") {
+    document.getElementById("civil").style.display = "block";
+  } else if (evento === "religiosa") {
+    document.getElementById("religiosa").style.display = "block";
+  } else {
+    document.getElementById("error").style.display = "block";
+  }
+</script>
 
 </body>
 </html>
