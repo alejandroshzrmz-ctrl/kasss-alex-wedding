@@ -2,68 +2,121 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Nuestras Bodas</title>
+  <title>Nuestras Bodas | Kasss & Alex</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f6f7fb;
+      background: #f5f7fa;
       text-align: center;
-      color: #333;
-    }
-
-    h2 {
-      margin: 40px 20px;
+      padding: 40px 20px;
       color: #1e3a5f;
     }
 
-    .card {
+    h1 {
+      margin-bottom: 30px;
+    }
+
+    .contenedor {
+      max-width: 500px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .evento {
       background: white;
-      margin: 20px auto;
-      max-width: 420px;
-      padding: 28px;
-      border-radius: 14px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      padding: 22px;
+      border-radius: 16px;
       text-decoration: none;
-      color: inherit;
-      display: none;
-      font-size: 1.2em;
+      color: #1e3a5f;
+      font-size: 1.1em;
       font-weight: bold;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      display: none;
+      cursor: pointer;
+    }
+
+    .evento span {
+      font-size: 1.4em;
+      margin-right: 10px;
+    }
+
+    .bloqueo {
+      color: #999;
+      margin-top: 40px;
+      display: none;
     }
   </style>
 </head>
 
 <body>
 
-<h2>Elige el evento al que te hemos invitado</h2>
+  <h1>Elige el evento al que te hemos invitado</h1>
 
-<a id="playa" class="card" href="playa.html">🌴 Boda en la Playa</a>
-<a id="civil" class="card" href="civil.html">📜 Boda Civil</a>
-<a id="religiosa" class="card" href="religiosa.html">⛪ Boda Religiosa</a>
+  <div class="contenedor">
+    <a class="evento" data-evento="playa" id="linkPlaya">
+      <span>🌴</span> Boda en la Playa
+    </a>
 
-<script>
-  const params = new URLSearchParams(window.location.search);
-  const eventoParam = params.get("evento");
+    <a class="evento" data-evento="civil" id="linkCivil">
+      <span>📜</span> Boda Civil
+    </a>
 
-  // Si NO hay parámetro → mostrar las 3
-  if (!eventoParam) {
-    document.getElementById("playa").style.display = "block";
-    document.getElementById("civil").style.display = "block";
-    document.getElementById("religiosa").style.display = "block";
-  } else {
-    // Puede venir uno o varios: playa,civil,religiosa
-    const eventosPermitidos = eventoParam.split(",");
+    <a class="evento" data-evento="religiosa" id="linkReligiosa">
+      <span>⛪</span> Boda Religiosa
+    </a>
+  </div>
 
-    eventosPermitidos.forEach(evento => {
-      const el = document.getElementById(evento.trim());
-      if (el) {
-        el.style.display = "block";
+  <div class="bloqueo" id="mensajeBloqueo">
+    🔒 No tienes acceso a ningún evento.
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const permiso = params.get("evento");
+
+    const eventos = document.querySelectorAll(".evento");
+    const mensaje = document.getElementById("mensajeBloqueo");
+
+    // ===============================
+    // MOSTRAR EVENTOS CORRECTOS
+    // ===============================
+    if (!permiso) {
+      // Sin parámetros → mostrar los 3
+      eventos.forEach(e => e.style.display = "block");
+    } else {
+      const permitidos = permiso.split(",");
+      let algunoVisible = false;
+
+      eventos.forEach(e => {
+        if (permitidos.includes(e.dataset.evento)) {
+          e.style.display = "block";
+          algunoVisible = true;
+        }
+      });
+
+      if (!algunoVisible) {
+        mensaje.style.display = "block";
+      }
+    }
+
+    // ===============================
+    // CONSERVAR PERMISOS AL ENTRAR
+    // ===============================
+    eventos.forEach(e => {
+      const eventoActual = e.dataset.evento;
+
+      if (permiso) {
+        e.href = eventoActual + ".html?evento=" + permiso;
+      } else {
+        e.href = eventoActual + ".html";
       }
     });
-  }
-</script>
+  </script>
 
 </body>
 </html>
