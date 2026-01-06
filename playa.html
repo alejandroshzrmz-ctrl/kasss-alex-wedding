@@ -2,62 +2,99 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Boda en la Playa</title>
+<title>Beach Wedding | Kasss & Alex</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body{font-family:Arial;background:#eef6fb;padding:30px}
-.card{max-width:500px;margin:auto;background:white;padding:25px;border-radius:20px}
+.top{text-align:right;margin-bottom:10px}
+.top button{border:none;background:none;font-weight:bold;cursor:pointer}
+.card{max-width:520px;margin:auto;background:white;padding:25px;border-radius:20px}
 input,select,button{
-  width:100%;
-  margin-top:10px;
-  padding:12px;
-  border-radius:12px;
-  border:1px solid #ccc;
+  width:100%;margin-top:10px;padding:12px;
+  border-radius:12px;border:1px solid #ccc
 }
-button{background:#0a3d62;color:white;border:none}
+button.main{background:#0a3d62;color:white;border:none}
+button.back{background:#ccc;color:black}
 </style>
 </head>
+
 <body>
 
-<div class="card">
-<h2>🌴 Boda en la Playa</h2>
-<p>Fecha, ubicación, código de vestimenta aquí.</p>
+<div class="top">
+  <button onclick="setLang('es')">ES</button> |
+  <button onclick="setLang('en')">EN</button>
+</div>
 
-<h3>Confirmar asistencia</h3>
+<div class="card">
+<h2 data-es="🌴 Boda en la Playa" data-en="🌴 Beach Wedding"></h2>
+
+<p data-es="Ceremonia frente al mar."
+   data-en="Beach ceremony by the ocean."></p>
+
+<h3 data-es="Confirmar asistencia" data-en="Confirm attendance"></h3>
 
 <input id="cel" placeholder="WhatsApp / Celular">
 <input id="correo" placeholder="Correo electrónico">
 <select id="acomps"></select>
 
-<button onclick="confirmar()">Confirmar asistencia</button>
+<button class="main"
+  data-es="Confirmar asistencia"
+  data-en="Confirm attendance"
+  onclick="confirmar()"></button>
+
+<button class="back"
+  data-es="Volver"
+  data-en="Back"
+  onclick="volver()"></button>
 </div>
 
 <script>
 const API = "https://script.google.com/macros/s/AKfycbxd8RlsY09Bqjp2A9db60X9Bj-W7noj8WPJy1CLgHTLjNQTWb_9eC0o2TeFp0dQ3ZRbFw/exec";
 const id = new URLSearchParams(window.location.search).get("id");
 
+/* ===== Idioma ===== */
+const lang = localStorage.getItem("lang") || "es";
+function setLang(l){ localStorage.setItem("lang",l); location.reload(); }
+document.querySelectorAll("[data-es]").forEach(el=>{
+  el.textContent = el.getAttribute("data-"+lang);
+});
+
+/* ===== Datos ===== */
 fetch(`${API}?id=${id}`)
 .then(r=>r.json())
 .then(d=>{
   const s = document.getElementById("acomps");
-  for(let i=1;i<=d.max;i++){
-    s.innerHTML += `<option value="${i}">${i} persona(s)</option>`;
+  for(let i=0;i<=d.max;i++){
+    s.innerHTML += `<option value="${i}">${i}</option>`;
   }
 });
 
 function confirmar(){
-  const data = {
-    id,
-    evento:"playa",
-    celular:cel.value,
-    correo:correo.value,
-    acomp:acomps.value
-  };
-
   fetch(API,{
     method:"POST",
-    body:JSON.stringify(data)
-  }).then(()=>alert("¡Gracias por confirmar! 💙"));
+    body:JSON.stringify({
+      id,
+      evento:"playa",
+      celular:cel.value,
+      correo:correo.value,
+      acompanantes:acomps.value
+    })
+  })
+  .then(r=>r.json())
+  .then(res=>{
+    if(res.error){
+      alert("⚠️ " + res.error);
+    }else{
+      alert(lang==="es"
+        ? "✅ Confirmación guardada. Este fue tu único cambio permitido."
+        : "✅ Confirmation saved. This was your only allowed change."
+      );
+    }
+  });
+}
+
+function volver(){
+  window.location.href = "eventos.html?id=" + id;
 }
 </script>
 
