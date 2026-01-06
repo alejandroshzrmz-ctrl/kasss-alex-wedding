@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Boda en la Playa | Kasss & Alex</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(#e8f4ff, #ffffff);
+      color: #1e3a5f;
+      padding: 30px 20px;
+    }
+
+    .contenedor {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      text-align: center;
+      font-weight: normal;
+      margin-top: 0;
+      color: #4f7aa8;
+    }
+
+    .seccion {
+      margin-top: 25px;
+    }
+
+    .seccion strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .confirmar {
+      margin-top: 35px;
+      padding: 16px;
+      background: #1e88e5;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.1em;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .confirmar:disabled {
+      background: #9bb9d6;
+      cursor: not-allowed;
+    }
+
+    .mensaje {
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+      color: green;
+      display: none;
+    }
+
+    .volver {
+      margin-top: 25px;
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      color: #1e3a5f;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="contenedor">
+
+    <h1>🌴 Boda en la Playa</h1>
+    <h2>Kasss & Alex</h2>
+
+    <div class="seccion">
+      <strong>📅 Fecha</strong>
+      <div>Domingo, 15 de marzo de 2027</div>
+    </div>
+
+    <div class="seccion">
+      <strong>📍 Lugar</strong>
+      <div>Hotel por definir – Riviera Maya</div>
+    </div>
+
+    <div class="seccion">
+      <strong>👗 Código de vestimenta</strong>
+      <div>Formal Playa</div>
+    </div>
+
+    <div class="seccion">
+      <strong>⏰ Hora</strong>
+      <div>5:30 PM</div>
+    </div>
+
+    <button class="confirmar" id="btnConfirmar">
+      Confirmar asistencia
+    </button>
+
+    <div class="mensaje" id="mensajeConfirmado">
+      ✅ Asistencia confirmada. ¡Gracias!
+    </div>
+
+    <a class="volver" href="eventos.html">← Volver a eventos</a>
+
+  </div>
+
+  <script>
+    const boton = document.getElementById("btnConfirmar");
+    const mensaje = document.getElementById("mensajeConfirmado");
+
+    if (localStorage.getItem("confirmo_playa") === "si") {
+      boton.disabled = true;
+      mensaje.style.display = "block";
+    }
+
+    boton.addEventListener("click", () => {
+      localStorage.setItem("confirmo_playa", "si");
+      boton.disabled = true;
+      mensaje.style.display = "block";
+    });
+  </script>
+
+</body>
+</html>
