@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Kasss & Alex</title>
+  <title>Kasss & Alex Wedding</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
@@ -12,7 +12,7 @@
       height: 100vh;
       background:
         linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)),
-        url("https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e");
+        url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee");
       background-size: cover;
       background-position: center;
       color: white;
@@ -20,6 +20,20 @@
       flex-direction: column;
       justify-content: space-between;
       text-align: center;
+    }
+
+    .topbar {
+      text-align: right;
+      padding: 15px 20px;
+    }
+
+    .topbar button {
+      background: none;
+      border: none;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 0.9em;
     }
 
     h1 {
@@ -44,37 +58,62 @@
     footer {
       font-size: 0.8em;
       margin-bottom: 20px;
-      opacity: 0.8;
+      opacity: 0.85;
     }
   </style>
 </head>
 
 <body>
 
-  <h1>Kasss & Alex</h1>
+  <!-- Selector de idioma -->
+  <div class="topbar">
+    <button onclick="setLang('es')">ES</button> |
+    <button onclick="setLang('en')">EN</button>
+  </div>
 
-  <a class="btn" id="acompananos">Acompáñanos</a>
+  <h1 data-es="Kasss & Alex" data-en="Kasss & Alex">
+    Kasss & Alex
+  </h1>
 
-  <footer>
+  <a class="btn" id="acompananos"
+     data-es="Acompáñanos"
+     data-en="Join us">
+    Acompáñanos
+  </a>
+
+  <footer data-es="Invitación digital"
+          data-en="Digital invitation">
     Invitación digital
   </footer>
 
   <script>
-    // Lee permisos desde el link de invitación
+    // =====================
+    // IDIOMA
+    // =====================
+    const lang = localStorage.getItem("lang") || "es";
+
+    function setLang(l) {
+      localStorage.setItem("lang", l);
+      location.reload();
+    }
+
+    document.querySelectorAll("[data-es]").forEach(el => {
+      el.textContent = el.getAttribute("data-" + lang);
+    });
+
+    // =====================
+    // PASAR PERMISOS A EVENTOS
+    // =====================
     const params = new URLSearchParams(window.location.search);
     const evento = params.get("evento");
-
     const boton = document.getElementById("acompananos");
 
-    // Si hay permisos, pásalos a eventos.html
     if (evento) {
       boton.href = "eventos.html?evento=" + evento;
     } else {
-      // Si no hay permisos, muestra las 3 bodas
       boton.href = "eventos.html";
     }
   </script>
 
 </body>
 </html>
-
