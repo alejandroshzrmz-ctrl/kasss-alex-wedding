@@ -28,14 +28,9 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.08);
       text-decoration: none;
       color: inherit;
-      display: none; /* 👈 OCULTAS POR DEFECTO */
+      display: none;
       font-size: 1.2em;
       font-weight: bold;
-    }
-
-    .error {
-      margin-top: 60px;
-      color: #777;
     }
   </style>
 </head>
@@ -48,22 +43,25 @@
 <a id="civil" class="card" href="civil.html">📜 Boda Civil</a>
 <a id="religiosa" class="card" href="religiosa.html">⛪ Boda Religiosa</a>
 
-<div id="error" class="error" style="display:none;">
-  <p>🔒 No tienes acceso a ningún evento.</p>
-</div>
-
 <script>
   const params = new URLSearchParams(window.location.search);
-  const evento = params.get("evento");
+  const eventoParam = params.get("evento");
 
-  if (evento === "playa") {
+  // Si NO hay parámetro → mostrar las 3
+  if (!eventoParam) {
     document.getElementById("playa").style.display = "block";
-  } else if (evento === "civil") {
     document.getElementById("civil").style.display = "block";
-  } else if (evento === "religiosa") {
     document.getElementById("religiosa").style.display = "block";
   } else {
-    document.getElementById("error").style.display = "block";
+    // Puede venir uno o varios: playa,civil,religiosa
+    const eventosPermitidos = eventoParam.split(",");
+
+    eventosPermitidos.forEach(evento => {
+      const el = document.getElementById(evento.trim());
+      if (el) {
+        el.style.display = "block";
+      }
+    });
   }
 </script>
 
