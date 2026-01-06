@@ -2,71 +2,51 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Kasss & Alex Wedding</title>
+  <title>Kasss & Alex</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f6f7fb;
-      color: #333;
+      height: 100vh;
+      background:
+        linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)),
+        url("https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e");
+      background-size: cover;
+      background-position: center;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
       text-align: center;
     }
 
-    header {
-      background: linear-gradient(135deg, #f4ede4, #e7f0ff);
-      padding: 50px 20px;
-    }
-
     h1 {
-      margin: 0;
-      font-size: 2.4em;
-      color: #1e3a5f;
+      margin-top: 80px;
+      font-size: 2.6em;
+      letter-spacing: 1px;
     }
 
-    .sections {
-      padding: 30px 20px;
-    }
-
-    .card {
+    .btn {
+      margin: 40px auto;
+      padding: 16px 40px;
       background: white;
-      margin: 20px auto;
-      max-width: 420px;
-      padding: 28px;
-      border-radius: 14px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-
-    .card:hover {
-      transform: scale(1.03);
-    }
-
-    footer {
-      font-size: 0.9em;
-      color: #777;
-      margin: 40px 0;
+      color: #1e3a5f;
+      border-radius: 30px;
+      text-decoration: none;
+      font-size: 1.1em;
+      font-weight: bold;
+      width: fit-content;
     }
   </style>
 </head>
 
 <body>
-
-<header>
   <h1>Kasss & Alex</h1>
-</header>
 
-<section class="sections">
-  <div class="card">🌴 Boda en la Playa</div>
-  <div class="card">📜 Boda Civil</div>
-  <div class="card">⛪ Boda Religiosa</div>
-</section>
-
-<footer>
-  Invitación digital · Kasss & Alex
-</footer>
-
+  <a class="btn" href="eventos.html">
+    Acompáñanos
+  </a>
 </body>
 </html>
