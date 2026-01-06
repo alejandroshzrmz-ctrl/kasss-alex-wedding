@@ -11,7 +11,7 @@
       font-family: Arial, sans-serif;
       height: 100vh;
       background:
-        linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)),
+        linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
         url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee");
       background-size: cover;
       background-position: center;
@@ -42,6 +42,13 @@
       letter-spacing: 1px;
     }
 
+    h2 {
+      font-weight: normal;
+      margin-top: 10px;
+      font-size: 1.2em;
+      opacity: 0.95;
+    }
+
     .btn {
       margin: 40px auto;
       padding: 16px 40px;
@@ -65,15 +72,20 @@
 
 <body>
 
-  <!-- Selector de idioma -->
+  <!-- Idioma -->
   <div class="topbar">
     <button onclick="setLang('es')">ES</button> |
     <button onclick="setLang('en')">EN</button>
   </div>
 
-  <h1 data-es="Kasss & Alex" data-en="Kasss & Alex">
-    Kasss & Alex
-  </h1>
+  <div>
+    <h1 data-es="Kasss & Alex" data-en="Kasss & Alex">Kasss & Alex</h1>
+    <h2 id="nombreInvitado"
+        data-es="Te invitamos a celebrar con nosotros"
+        data-en="We invite you to celebrate with us">
+      Te invitamos a celebrar con nosotros
+    </h2>
+  </div>
 
   <a class="btn" id="acompananos"
      data-es="Acompáñanos"
@@ -88,10 +100,14 @@
 
   <script>
     // =====================
+    // CONFIGURA TU URL DE APPS SCRIPT AQUÍ
+    // =====================
+    const API_URL = "https://script.google.com/macros/s/AKfycbyyN4myVmXJwBgnIe9qI92LoP22QbJbO8Zk-5pW3NKYA24DyDVV80XT9wsK-a0VdvEwZA/exec";
+
+    // =====================
     // IDIOMA
     // =====================
     const lang = localStorage.getItem("lang") || "es";
-
     function setLang(l) {
       localStorage.setItem("lang", l);
       location.reload();
@@ -102,18 +118,30 @@
     });
 
     // =====================
-    // PASAR PERMISOS A EVENTOS
+    // LEER ID DE INVITADO
     // =====================
     const params = new URLSearchParams(window.location.search);
-    const evento = params.get("evento");
+    const id = params.get("id");
+
     const boton = document.getElementById("acompananos");
+    const nombreInvitado = document.getElementById("nombreInvitado");
 
-    if (evento) {
-      boton.href = "eventos.html?evento=" + evento;
+    if (!id) {
+      nombreInvitado.textContent =
+        lang === "es"
+          ? "Invitación personalizada requerida"
+          : "Personalized invitation required";
+      boton.style.display = "none";
     } else {
-      boton.href = "eventos.html";
-    }
-  </script>
+      fetch(API_URL + "?id=" + id)
+        .then(r => r.json())
+        .then(data => {
+          if (data.error) {
+            nombreInvitado.textContent = data.error;
+            boton.style.display = "none";
+            return;
+          }
 
-</body>
-</html>
+          // Mostrar nombre del invitado
+          nombreInvitado.textContent =
+            (lang =
