@@ -1,154 +1,57 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Nuestras Bodas | Kasss & Alex</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f7fa;
-      text-align: center;
-      padding: 40px 20px;
-      color: #1e3a5f;
-    }
-
-    .topbar {
-      text-align: right;
-      margin-bottom: 20px;
-    }
-
-    .topbar button {
-      background: none;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-      color: #1e3a5f;
-    }
-
-    h1 {
-      margin-bottom: 30px;
-    }
-
-    .contenedor {
-      max-width: 500px;
-      margin: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .evento {
-      background: white;
-      padding: 22px;
-      border-radius: 16px;
-      text-decoration: none;
-      color: #1e3a5f;
-      font-size: 1.1em;
-      font-weight: bold;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-      display: none;
-      cursor: pointer;
-    }
-
-    .evento span {
-      font-size: 1.4em;
-      margin-right: 10px;
-    }
-
-    .bloqueo {
-      color: #999;
-      margin-top: 40px;
-      display: none;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Nuestras Bodas</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:Arial;background:#f5f7fa;text-align:center;padding:40px}
+.card{
+  max-width:420px;
+  margin:15px auto;
+  padding:20px;
+  border-radius:20px;
+  background:white;
+  box-shadow:0 10px 20px rgba(0,0,0,.1);
+}
+button{
+  margin-top:10px;
+  padding:14px 24px;
+  border:none;
+  border-radius:20px;
+  background:#0a3d62;
+  color:white;
+  font-size:16px;
+}
+</style>
 </head>
-
 <body>
 
-  <!-- Selector de idioma -->
-  <div class="topbar">
-    <button onclick="setLang('es')">ES</button> |
-    <button onclick="setLang('en')">EN</button>
-  </div>
+<h2>Elige el evento al que te hemos invitado</h2>
+<div id="eventos"></div>
 
-  <h1 data-es="Elige el evento al que te hemos invitado"
-      data-en="Choose the event you are invited to">
-    Elige el evento al que te hemos invitado
-  </h1>
+<script>
+const API = "https://script.google.com/macros/s/AKfycbxd8RlsY09Bqjp2A9db60X9Bj-W7noj8WPJy1CLgHTLjNQTWb_9eC0o2TeFp0dQ3ZRbFw/exec";
+const id = new URLSearchParams(window.location.search).get("id");
 
-  <div class="contenedor">
-    <a class="evento" data-evento="playa">
-      <span>🌴</span>
-      <span data-es="Boda en la Playa" data-en="Beach Wedding">Boda en la Playa</span>
-    </a>
+fetch(`${API}?id=${id}`)
+.then(r=>r.json())
+.then(d=>{
+  const c = document.getElementById("eventos");
+  if(d.playa) c.innerHTML += card("🌴 Boda en la Playa","playa.html");
+  if(d.civil) c.innerHTML += card("📜 Boda Civil","civil.html");
+  if(d.religiosa) c.innerHTML += card("⛪ Boda Religiosa","religiosa.html");
+});
 
-    <a class="evento" data-evento="civil">
-      <span>📜</span>
-      <span data-es="Boda Civil" data-en="Civil Wedding">Boda Civil</span>
-    </a>
-
-    <a class="evento" data-evento="religiosa">
-      <span>⛪</span>
-      <span data-es="Boda Religiosa" data-en="Religious Wedding">Boda Religiosa</span>
-    </a>
-  </div>
-
-  <div class="bloqueo" id="mensajeBloqueo"
-       data-es="🔒 No tienes acceso a ningún evento."
-       data-en="🔒 You do not have access to any event.">
-    🔒 No tienes acceso a ningún evento.
-  </div>
-
-  <script>
-    // =====================
-    // IDIOMA
-    // =====================
-    const lang = localStorage.getItem("lang") || "es";
-    function setLang(l){ localStorage.setItem("lang", l); location.reload(); }
-
-    document.querySelectorAll("[data-es]").forEach(el => {
-      el.textContent = el.getAttribute("data-" + lang);
-    });
-
-    // =====================
-    // PERMISOS DE EVENTOS
-    // =====================
-    const params = new URLSearchParams(window.location.search);
-    const permiso = params.get("evento");
-
-    const eventos = document.querySelectorAll(".evento");
-    const mensaje = document.getElementById("mensajeBloqueo");
-
-    if (!permiso) {
-      // Sin parámetros → mostrar los 3
-      eventos.forEach(e => e.style.display = "block");
-    } else {
-      const permitidos = permiso.split(",");
-      let visible = false;
-
-      eventos.forEach(e => {
-        if (permitidos.includes(e.dataset.evento)) {
-          e.style.display = "block";
-          visible = true;
-        }
-      });
-
-      if (!visible) mensaje.style.display = "block";
-    }
-
-    // =====================
-    // CONSERVAR PERMISOS AL ENTRAR
-    // =====================
-    eventos.forEach(e => {
-      const ev = e.dataset.evento;
-      e.href = permiso
-        ? ev + ".html?evento=" + permiso
-        : ev + ".html";
-    });
-  </script>
+function card(t,link){
+  return `
+  <div class="card">
+    <h3>${t}</h3>
+    <button onclick="go('${link}')">Ver información</button>
+  </div>`;
+}
+function go(p){ window.location.href = p + "?id=" + id; }
+</script>
 
 </body>
 </html>
