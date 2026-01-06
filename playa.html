@@ -1,211 +1,65 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Kasss & Alex | Beach Wedding</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(#e8f4ff, #ffffff);
-      color: #1e3a5f;
-      padding: 30px 20px;
-    }
-
-    .topbar {
-      text-align: right;
-      margin-bottom: 10px;
-    }
-
-    .topbar button {
-      background: none;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-      color: #1e3a5f;
-      font-size: 0.95em;
-    }
-
-    .contenedor {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 5px;
-    }
-
-    h2 {
-      text-align: center;
-      font-weight: normal;
-      margin-top: 0;
-      color: #4f7aa8;
-    }
-
-    .seccion {
-      margin-top: 22px;
-    }
-
-    .seccion strong {
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    .confirmar {
-      margin-top: 35px;
-      padding: 16px;
-      background: #1e88e5;
-      color: white;
-      border: none;
-      border-radius: 30px;
-      font-size: 1.05em;
-      cursor: pointer;
-      width: 100%;
-    }
-
-    .confirmar:disabled {
-      background: #9bb9d6;
-      cursor: not-allowed;
-    }
-
-    .mensaje {
-      text-align: center;
-      margin-top: 18px;
-      font-weight: bold;
-      color: green;
-      display: none;
-    }
-
-    .volver {
-      margin-top: 22px;
-      display: block;
-      text-align: center;
-      text-decoration: none;
-      color: #1e3a5f;
-      font-weight: bold;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Boda en la Playa</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:Arial;background:#eef6fb;padding:30px}
+.card{max-width:500px;margin:auto;background:white;padding:25px;border-radius:20px}
+input,select,button{
+  width:100%;
+  margin-top:10px;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #ccc;
+}
+button{background:#0a3d62;color:white;border:none}
+</style>
 </head>
-
 <body>
 
-  <!-- Selector de idioma -->
-  <div class="topbar">
-    <button onclick="setLang('es')">ES</button> |
-    <button onclick="setLang('en')">EN</button>
-  </div>
+<div class="card">
+<h2>🌴 Boda en la Playa</h2>
+<p>Fecha, ubicación, código de vestimenta aquí.</p>
 
-  <div class="contenedor">
+<h3>Confirmar asistencia</h3>
 
-    <h1 data-es="🌴 Boda en la Playa" data-en="🌴 Beach Wedding">
-      🌴 Boda en la Playa
-    </h1>
-    <h2>Kasss & Alex</h2>
+<input id="cel" placeholder="WhatsApp / Celular">
+<input id="correo" placeholder="Correo electrónico">
+<select id="acomps"></select>
 
-    <div class="seccion">
-      <strong data-es="📅 Fecha" data-en="📅 Date">📅 Fecha</strong>
-      <div data-es="Domingo, 15 de marzo de 2027"
-           data-en="Sunday, March 15, 2027">
-        Domingo, 15 de marzo de 2027
-      </div>
-    </div>
+<button onclick="confirmar()">Confirmar asistencia</button>
+</div>
 
-    <div class="seccion">
-      <strong data-es="📍 Lugar" data-en="📍 Location">📍 Lugar</strong>
-      <div data-es="Hotel por definir – Riviera Maya"
-           data-en="Hotel to be announced – Riviera Maya">
-        Hotel por definir – Riviera Maya
-      </div>
-    </div>
+<script>
+const API = "https://script.google.com/macros/s/AKfycbxd8RlsY09Bqjp2A9db60X9Bj-W7noj8WPJy1CLgHTLjNQTWb_9eC0o2TeFp0dQ3ZRbFw/exec";
+const id = new URLSearchParams(window.location.search).get("id");
 
-    <div class="seccion">
-      <strong data-es="👗 Código de vestimenta"
-              data-en="👗 Dress code">
-        👗 Código de vestimenta
-      </strong>
-      <div data-es="Formal Playa"
-           data-en="Beach Formal">
-        Formal Playa
-      </div>
-    </div>
+fetch(`${API}?id=${id}`)
+.then(r=>r.json())
+.then(d=>{
+  const s = document.getElementById("acomps");
+  for(let i=1;i<=d.max;i++){
+    s.innerHTML += `<option value="${i}">${i} persona(s)</option>`;
+  }
+});
 
-    <div class="seccion">
-      <strong data-es="⏰ Hora" data-en="⏰ Time">⏰ Hora</strong>
-      <div data-es="5:30 PM" data-en="5:30 PM">5:30 PM</div>
-    </div>
+function confirmar(){
+  const data = {
+    id,
+    evento:"playa",
+    celular:cel.value,
+    correo:correo.value,
+    acomp:acomps.value
+  };
 
-    <button class="confirmar" id="btnConfirmar"
-      data-es="Confirmar asistencia"
-      data-en="Confirm attendance">
-      Confirmar asistencia
-    </button>
-
-    <div class="mensaje" id="mensajeConfirmado"
-      data-es="✅ Asistencia confirmada. ¡Gracias!"
-      data-en="✅ Attendance confirmed. Thank you!">
-      ✅ Asistencia confirmada. ¡Gracias!
-    </div>
-
-    <a class="volver" id="volverEventos"
-      data-es="← Volver a eventos"
-      data-en="← Back to events">
-      ← Volver a eventos
-    </a>
-
-  </div>
-
-  <script>
-    // =====================
-    // IDIOMA ES / EN
-    // =====================
-    const lang = localStorage.getItem("lang") || "es";
-
-    function setLang(l) {
-      localStorage.setItem("lang", l);
-      location.reload();
-    }
-
-    document.querySelectorAll("[data-es]").forEach(el => {
-      el.textContent = el.getAttribute("data-" + lang);
-    });
-
-    // =====================
-    // CONFIRMACIÓN (LOCAL)
-    // =====================
-    const boton = document.getElementById("btnConfirmar");
-    const mensaje = document.getElementById("mensajeConfirmado");
-
-    if (localStorage.getItem("confirmo_playa") === "si") {
-      boton.disabled = true;
-      mensaje.style.display = "block";
-    }
-
-    boton.addEventListener("click", () => {
-      localStorage.setItem("confirmo_playa", "si");
-      boton.disabled = true;
-      mensaje.style.display = "block";
-    });
-
-    // =====================
-    // VOLVER A EVENTOS CON PERMISOS
-    // =====================
-    const params = new URLSearchParams(window.location.search);
-    const evento = params.get("evento");
-    const volver = document.getElementById("volverEventos");
-
-    if (evento) {
-      volver.href = "eventos.html?evento=" + evento;
-    } else {
-      volver.href = "eventos.html";
-    }
-  </script>
+  fetch(API,{
+    method:"POST",
+    body:JSON.stringify(data)
+  }).then(()=>alert("¡Gracias por confirmar! 💙"));
+}
+</script>
 
 </body>
 </html>
