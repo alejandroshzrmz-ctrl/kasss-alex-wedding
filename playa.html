@@ -115,11 +115,15 @@
       ✅ Asistencia confirmada. ¡Gracias!
     </div>
 
-    <a class="volver" href="eventos.html">← Volver a eventos</a>
+    <!-- VOLVER CONSERVANDO PERMISOS -->
+    <a class="volver" id="volverEventos">← Volver a eventos</a>
 
   </div>
 
   <script>
+    // =========================
+    // CONFIRMAR ASISTENCIA
+    // =========================
     const boton = document.getElementById("btnConfirmar");
     const mensaje = document.getElementById("mensajeConfirmado");
 
@@ -133,6 +137,19 @@
       boton.disabled = true;
       mensaje.style.display = "block";
     });
+
+    // =========================
+    // VOLVER A EVENTOS CON PERMISOS
+    // =========================
+    const params = new URLSearchParams(window.location.search);
+    const evento = params.get("evento");
+    const volver = document.getElementById("volverEventos");
+
+    if (evento) {
+      volver.href = "eventos.html?evento=" + evento;
+    } else {
+      volver.href = "eventos.html";
+    }
   </script>
 
 </body>
