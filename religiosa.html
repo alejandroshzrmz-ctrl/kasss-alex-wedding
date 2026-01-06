@@ -5,99 +5,61 @@
 <title>Religious Wedding | Kasss & Alex</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body{font-family:Arial;background:#eef3ee;padding:30px;color:#333}
-.top{display:flex;justify-content:flex-end;margin-bottom:10px}
-.top button{border:none;background:none;font-weight:bold;cursor:pointer}
-.card{max-width:500px;margin:auto;background:white;padding:25px;border-radius:20px}
-input,select,button{
-  width:100%;margin-top:10px;padding:12px;
-  border-radius:12px;border:1px solid #ccc
-}
+body{font-family:Arial;background:#eef3ee;padding:30px}
+.top{text-align:right;margin-bottom:10px}
+.card{max-width:520px;margin:auto;background:white;padding:25px;border-radius:20px}
+input,select,button{width:100%;margin-top:10px;padding:12px;border-radius:12px;border:1px solid #ccc}
 button.main{background:#2c5f2d;color:white;border:none}
-button.back{background:#ccc;color:black}
+button.back{background:#ccc}
 </style>
 </head>
 
 <body>
 
 <div class="top">
-  <button onclick="setLang('es')">ES</button> | 
-  <button onclick="setLang('en')">EN</button>
+<button onclick="setLang('es')">ES</button> |
+<button onclick="setLang('en')">EN</button>
 </div>
 
 <div class="card">
-<h2 data-es="⛪ Boda Religiosa" data-en="⛪ Religious Wedding">⛪ Boda Religiosa</h2>
+<h2 data-es="⛪ Boda Religiosa" data-en="⛪ Religious Wedding"></h2>
+<p data-es="Ceremonia religiosa."
+   data-en="Religious ceremony."></p>
 
-<p data-es="Ceremonia religiosa en compañía de familia y amigos."
-   data-en="Religious ceremony with family and friends.">
-Ceremonia religiosa en compañía de familia y amigos.
-</p>
-
-<h3 data-es="Confirmar asistencia" data-en="Confirm attendance">
-Confirmar asistencia
-</h3>
+<h3 data-es="Confirmar asistencia" data-en="Confirm attendance"></h3>
 
 <input id="cel" placeholder="WhatsApp / Celular">
 <input id="correo" placeholder="Correo electrónico">
 <select id="acomps"></select>
 
-<button class="main"
-  data-es="Confirmar asistencia"
-  data-en="Confirm attendance"
-  onclick="confirmar()">
-Confirmar asistencia
-</button>
+<button class="main" onclick="confirmar()"
+ data-es="Confirmar asistencia"
+ data-en="Confirm attendance"></button>
 
-<button class="back"
-  data-es="Volver"
-  data-en="Back"
-  onclick="volver()">
-Volver
-</button>
+<button class="back" onclick="volver()"
+ data-es="Volver"
+ data-en="Back"></button>
 </div>
 
 <script>
-/* ===== CONFIG ===== */
-const API = "https://script.google.com/macros/s/AKfycbxd8RlsY09Bqjp2A9db60X9Bj-W7noj8WPJy1CLgHTLjNQTWb_9eC0o2TeFp0dQ3ZRbFw/exec";
+const API="https://script.google.com/macros/s/AKfycbxd8RlsY09Bqjp2A9db60X9Bj-W7noj8WPJy1CLgHTLjNQTWb_9eC0o2TeFp0dQ3ZRbFw/exec";
+const id=new URLSearchParams(window.location.search).get("id");
+const lang=localStorage.getItem("lang")||"es";
+function setLang(l){localStorage.setItem("lang",l);location.reload();}
+document.querySelectorAll("[data-es]").forEach(el=>el.textContent=el.getAttribute("data-"+lang));
 
-/* ===== IDIOMA ===== */
-const lang = localStorage.getItem("lang") || "es";
-function setLang(l){ localStorage.setItem("lang",l); location.reload(); }
-document.querySelectorAll("[data-es]").forEach(el=>{
-  el.textContent = el.getAttribute("data-"+lang);
-});
-
-/* ===== DATA ===== */
-const id = new URLSearchParams(window.location.search).get("id");
-
-fetch(`${API}?id=${id}`)
-.then(r=>r.json())
-.then(d=>{
-  const s = document.getElementById("acomps");
-  for(let i=0;i<=d.max;i++){
-    s.innerHTML += `<option value="${i}">${i}</option>`;
-  }
+fetch(`${API}?id=${id}`).then(r=>r.json()).then(d=>{
+  for(let i=0;i<=d.max;i++)acomps.innerHTML+=`<option>${i}</option>`;
 });
 
 function confirmar(){
-  fetch(API,{
-    method:"POST",
-    body:JSON.stringify({
-      id,
-      evento:"religiosa",
-      celular:cel.value,
-      correo:correo.value,
-      acomp:acomps.value
-    })
-  }).then(()=>alert(lang==="es"
-    ? "¡Gracias por confirmar!"
-    : "Thank you for confirming!"
-  ));
+  fetch(API,{method:"POST",body:JSON.stringify({
+    id,evento:"religiosa",celular:cel.value,correo:correo.value,acompanantes:acomps.value
+  })}).then(r=>r.json()).then(res=>{
+    alert(res.error?"⚠️ "+res.error:"✅ Confirmación guardada");
+  });
 }
-
-function volver(){
-  window.location.href = "eventos.html?id=" + id;
-}
+function volver(){location.href="eventos.html?id="+id;}
 </script>
 
 </body>
