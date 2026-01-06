@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Kasss & Alex | Religious Wedding</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0; font-family: Arial, sans-serif;
+      background: linear-gradient(#fff7ef, #ffffff);
+      color: #1e3a5f; padding: 30px 20px;
+    }
+
+    .topbar { text-align: right; margin-bottom: 10px; }
+    .topbar button { background:none; border:none; font-weight:bold; cursor:pointer; color:#1e3a5f; }
+
+    .contenedor {
+      max-width: 600px; margin:auto; background:white;
+      border-radius:20px; padding:30px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    h1 { text-align:center; margin-bottom:5px; }
+    h2 { text-align:center; font-weight:normal; margin-top:0; color:#b56a3a; }
+
+    .seccion { margin-top:22px; }
+    .seccion strong { display:block; margin-bottom:6px; }
+
+    .confirmar {
+      margin-top:35px; padding:16px; width:100%;
+      background:#b56a3a; color:white; border:none;
+      border-radius:30px; font-size:1.05em; cursor:pointer;
+    }
+    .confirmar:disabled { background:#d8b39a; cursor:not-allowed; }
+
+    .mensaje { text-align:center; margin-top:18px; font-weight:bold; color:green; display:none; }
+    .volver { margin-top:22px; display:block; text-align:center; text-decoration:none; color:#1e3a5f; font-weight:bold; }
+  </style>
+</head>
+
+<body>
+
+  <div class="topbar">
+    <button onclick="setLang('es')">ES</button> | <button onclick="setLang('en')">EN</button>
+  </div>
+
+  <div class="contenedor">
+    <h1 data-es="⛪ Boda Religiosa" data-en="⛪ Religious Wedding">⛪ Boda Religiosa</h1>
+    <h2>Kasss & Alex</h2>
+
+    <div class="seccion">
+      <strong data-es="📅 Fecha" data-en="📅 Date">📅 Fecha</strong>
+      <div data-es="Sábado, 13 de marzo de 2027" data-en="Saturday, March 13, 2027">Sábado, 13 de marzo de 2027</div>
+    </div>
+
+    <div class="seccion">
+      <strong data-es="📍 Lugar" data-en="📍 Location">📍 Lugar</strong>
+      <div data-es="Iglesia por definir" data-en="Church TBA">Iglesia por definir</div>
+    </div>
+
+    <div class="seccion">
+      <strong data-es="👗 Vestimenta" data-en="👗 Dress code">👗 Vestimenta</strong>
+      <div data-es="Formal" data-en="Formal">Formal</div>
+    </div>
+
+    <button class="confirmar" id="btnConfirmar" data-es="Confirmar asistencia" data-en="Confirm attendance">
+      Confirmar asistencia
+    </button>
+
+    <div class="mensaje" id="mensajeConfirmado" data-es="✅ Asistencia confirmada" data-en="✅ Attendance confirmed">
+      ✅ Asistencia confirmada
+    </div>
+
+    <a class="volver" id="volverEventos" data-es="← Volver a eventos" data-en="← Back to events">
+      ← Volver a eventos
+    </a>
+  </div>
+
+  <script>
+    const lang = localStorage.getItem("lang") || "es";
+    function setLang(l){ localStorage.setItem("lang", l); location.reload(); }
+    document.querySelectorAll("[data-es]").forEach(el => el.textContent = el.getAttribute("data-" + lang));
+
+    const boton = document.getElementById("btnConfirmar");
+    const mensaje = document.getElementById("mensajeConfirmado");
+    if (localStorage.getItem("confirmo_religiosa") === "si") {
+      boton.disabled = true; mensaje.style.display = "block";
+    }
+    boton.onclick = () => {
+      localStorage.setItem("confirmo_religiosa","si");
+      boton.disabled = true; mensaje.style.display = "block";
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const evento = params.get("evento");
+    document.getElementById("volverEventos").href = evento ? "eventos.html?evento="+evento : "eventos.html";
+  </script>
+
+</body>
+</html>
